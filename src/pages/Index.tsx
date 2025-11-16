@@ -9,6 +9,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
 import Icon from '@/components/ui/icon';
 import { toast } from 'sonner';
+import WebRTCCall from '@/components/WebRTCCall';
 
 interface Operator {
   id: number;
@@ -260,49 +261,12 @@ export default function Index() {
           </TabsList>
 
           <TabsContent value="calls" className="space-y-4">
+            <WebRTCCall onCallEnd={(duration) => {
+              toast.success(`Звонок завершён. Длительность: ${Math.floor(duration / 60)}:${(duration % 60).toString().padStart(2, '0')}`);
+            }} />
+
             <Card className="bg-slate-800/50 border-slate-700 p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-white">Панель звонков</h2>
-                <Button 
-                  onClick={handleCall}
-                  className={activeCall ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'}
-                >
-                  {activeCall ? (
-                    <>
-                      <Icon name="PhoneOff" size={18} className="mr-2" />
-                      Завершить ({formatTime(callTimer)})
-                    </>
-                  ) : (
-                    <>
-                      <Icon name="Phone" size={18} className="mr-2" />
-                      Начать звонок
-                    </>
-                  )}
-                </Button>
-              </div>
-
-              {activeCall && (
-                <Card className="bg-slate-900/50 border-slate-600 p-4 mb-6">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="relative">
-                        <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center">
-                          <Icon name="Phone" size={24} className="text-green-400" />
-                        </div>
-                        <div className="absolute inset-0 rounded-full bg-green-500/30 animate-pulse-ring"></div>
-                      </div>
-                      <div>
-                        <p className="text-white font-semibold">Активный звонок</p>
-                        <p className="text-slate-400 text-sm">+7 (999) 000-00-00</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-3xl font-mono font-bold text-white">{formatTime(callTimer)}</p>
-                    </div>
-                  </div>
-                </Card>
-              )}
-
+              <h2 className="text-xl font-bold text-white mb-4">История звонков</h2>
               <div className="space-y-3">
                 {calls.map((call) => (
                   <Card key={call.id} className="bg-slate-900/50 border-slate-700 p-4 hover:bg-slate-900/70 transition-colors">
